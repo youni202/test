@@ -1,0 +1,175 @@
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+
+const ApartmentGame = () => {
+  const [currentFloor, setCurrentFloor] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [showPenalty, setShowPenalty] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(5);
+  const [gameOver, setGameOver] = useState(false);
+  const [score, setScore] = useState(0);
+
+  const floorNames = {
+    '-2': '지하 2층',
+    '-1': '지하 1층',
+    0: '1층',
+    1: '2층',
+    2: '3층',
+    3: '4층',
+    4: '5층',
+    5: '옥상',
+    6: '헬기장'
+  };
+
+  useEffect(() => {
+    let timer;
+    if (gameStarted && !gameOver && !showPenalty) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            setShowPenalty(true);
+            return 5;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [gameStarted, gameOver, showPenalty]);
+
+  const handleFloorSelect = (floor) => {
+    if (!gameStarted || gameOver) return;
+
+    const validMoves = getValidMoves(currentFloor);
+    if (validMoves.includes(floor)) {
+      setCurrentFloor(floor);
+      setTimeLeft(5);
+      setScore(score + 1);
+    } else {
+      setShowPenalty(true);
+    }
+  };
+
+  const getValidMoves = (current) => {
+    let moves = [];
+    if (current > -2) moves.push(current - 1);
+    if (current < 6) moves.push(current + 1);
+    if (current === 5) moves.push(6);
+    return moves;
+  };
+
+  const startGame = () => {
+    setGameStarted(true);
+    setGameOver(false);
+    setCurrentFloor(0);
+    setScore(0);
+    setTimeLeft(5);
+    setShowPenalty(false);
+  };
+
+  const handlePenalty = () => {
+    setShowPenalty(false);
+    setGameOver(true);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-4 flex items-center justify-center">
+      <Card className="w-full max-w-lg p-6 bg-white shadow-xl rounded-xl">
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">아파트 게임</h1>
+          {!gameStarted ? (
+            <div className="text-center space-y-4">
+              <p className="text-gray-600 mb-4">
+                층을 이동하면서 최대한 많은 점수를 획득하세요!
+                제한 시간 안에 이동해야 합니다.
+              </p>
+              <Button 
+                onClick={startGame}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg"
+              >
+                게임 시작
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              <div className="grid grid-cols-3 gap-4 text-center mb-4">
+                <div className="bg-blue-100 p-2 rounded">
+                  <div className="text-sm text-gray-600">현재 층</div>
+                  <div className="text-xl font-bold text-blue-600">
+                    {floorNames[currentFloor]}
+                  </div>
+                </div>
+                <div className="bg-yellow-100 p-2 rounded">
+                  <div className="text-sm text-gray-600">남은 시간</div>
+                  <div className="text-xl font-bold text-yellow-600">
+                    {timeLeft}초
+                  </div>
+                </div>
+                <div className="bg-green-100 p-2 rounded">
+                  <div className="text-sm text-gray-600">점수</div>
+                  <div className="text-xl font-bold text-green-600">
+                    {score}점
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2">
+                {Object.entries(floorNames).map(([floor, name]) => (
+                  <Button
+                    key={floor}
+                    onClick={() => handleFloorSelect(parseInt(floor))}
+                    className={`p-4 ${
+                      parseInt(floor) === currentFloor
+                        ? 'bg-blue-500 text-white'
+                        : getValidMoves(currentFloor).includes(parseInt(floor))
+                        ? 'bg-green-500 hover:bg-green-600 text-white'
+                        : 'bg-gray-200 text-gray-400'
+                    }`}
+                    disabled={!getValidMoves(currentFloor).includes(parseInt(floor))}
+                  >
+                    {name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <Dialog open={showPenalty} onOpenChange={() => setShowPenalty(false)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>벌칙!</DialogTitle>
+              <DialogDescription>
+                {timeLeft <= 0 ? '시간 초과!' : '잘못된 이동!'} 
+                벌칙으로 한 잔 마시세요! 🍺
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button onClick={handlePenalty}>확인</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {gameOver && (
+          <Dialog open={gameOver} onOpenChange={() => setGameOver(false)}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>게임 종료!</DialogTitle>
+                <DialogDescription>
+                  최종 점수: {score}점
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button onClick={startGame}>다시 시작</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+      </Card>
+    </div>
+  );
+};
+
+export default ApartmentGame;
