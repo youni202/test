@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>삼정데이타서비스 | AI 데이터 활용 동의, 변경 및 철회</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+        }
+        .checkbox-custom {
+            accent-color: #1D4ED8;
+        }
+        .checkbox-withdraw {
+            accent-color: #D9534F; /* 철회는 붉은 계열로 강조 */
+        }
+        .tab-button.active {
+            background-color: #1D4ED8;
+            color: white;
+            font-weight: 700;
+        }
+        .tab-button {
+            background-color: #E5E7EB;
+            color: #4B5563;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="container mx-auto max-w-4xl p-4 sm:p-8">
+        <!-- 헤더 -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">삼정데이타서비스㈜</h1>
+            <p class="text-lg sm:text-xl text-blue-700 font-semibold mt-2">AI 기술 개발 데이터 활용 동의, 변경 및 철회</p>
+        </header>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="bg-white p-6 sm:p-10 rounded-2xl shadow-lg">
+            
+            <!-- 탭 선택 -->
+            <div class="mb-8 flex justify-center rounded-lg p-1 bg-gray-200">
+                <button id="submitTab" class="tab-button w-1/2 py-2 px-4 rounded-md transition-all active">동의 제출</button>
+                <button id="updateTab" class="tab-button w-1/2 py-2 px-4 rounded-md transition-all">동의 변경 및 철회</button>
+            </div>
+            
+            <!-- 동의서 양식 -->
+            <form id="consentForm">
+                <!-- 동의 제출 섹션 -->
+                <div id="submitSection">
+                    <section class="mb-8">
+                        <h2 class="text-xl font-bold text-gray-800 mb-3 border-b-2 border-gray-200 pb-2">프로젝트 안내</h2>
+                        <p class="text-gray-600 leading-relaxed">
+                            임직원 여러분, 안녕하세요. 우리 회사는 서비스 경쟁력을 강화하고 임직원 여러분의 업무 효율을 높이고자 AI 기술 개발 프로젝트를 시작합니다.
+                            이 프로젝트는 여러분의 소중한 업무 경험이 담긴 데이터를 기반으로 우리 회사만의 AI 에이전트를 개발하는 것을 목표로 합니다.
+                            <br><br>
+                            무엇보다 이 프로젝트는 <b>임직원 여러분의 개인정보를 안전하게 보호하고, 참여 여부를 자율적으로 선택하는 것</b>을 최우선 원칙으로 삼고 있습니다. 아래 내용을 충분히 검토하시고 참여 여부를 결정해주시기 바랍니다.
+                        </p>
+                    </section>
+                    
+                    <section class="mb-8">
+                        <h3 class="text-lg font-bold text-gray-700 mb-3">선택 동의 항목</h3>
+                        <p class="text-gray-600 mb-4">아래 각 항목을 확인하시고, 데이터 활용에 동의하는 항목만 선택해주세요. 복수 선택이 가능합니다.</p>
+                        <div class="space-y-4">
+                            <label for="emailConsent" class="flex items-start p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                <input type="checkbox" id="emailConsent" name="emailConsent" class="checkbox-custom h-5 w-5 mt-1 mr-4 flex-shrink-0">
+                                <div>
+                                    <span class="font-bold text-gray-800">A. 업무 이메일 데이터</span>
+                                    <p class="text-sm text-gray-600 mt-1">사내 계정 간 순수 업무 관련 이메일 텍스트가 비식별화 처리 후 활용됩니다.</p>
+                                </div>
+                            </label>
+                            <label for="messengerConsent" class="flex items-start p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                <input type="checkbox" id="messengerConsent" name="messengerConsent" class="checkbox-custom h-5 w-5 mt-1 mr-4 flex-shrink-0">
+                                <div>
+                                    <span class="font-bold text-gray-800">B. 업무 메신저 데이터</span>
+                                    <p class="text-sm text-gray-600 mt-1">공개된 업무 채널의 대화 내용이 비식별화 처리 후 활용됩니다. (1:1 대화 제외)</p>
+                                </div>
+                            </label>
+                            <label for="voiceConsent" class="flex items-start p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                <input type="checkbox" id="voiceConsent" name="voiceConsent" class="checkbox-custom h-5 w-5 mt-1 mr-4 flex-shrink-0">
+                                <div>
+                                    <span class="font-bold text-gray-800">C. 전화, 회의 음성 데이터</span>
+                                    <p class="text-sm text-gray-600 mt-1">사전 고지 및 동의된 업무 회의 음성이 비식별화 처리 후 활용됩니다.</p>
+                                </div>
+                            </label>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- 동의 변경 및 철회 섹션 -->
+                <div id="updateSection" class="hidden">
+                     <section class="mb-8">
+                        <h2 class="text-xl font-bold text-gray-800 mb-3 border-b-2 border-gray-200 pb-2">동의 변경 및 철회 </h2>
+                        <p class="text-gray-600 leading-relaxed">
+                            기존 동의 내용 중 <b>철회를 원하는 항목만 선택</b>해주세요. 체크하지 않은 항목은 동의로 처리됩니다.
+                        </p>
+                    </section>
+                     <section class="mb-8">
+                        <h3 class="text-lg font-bold text-gray-700 mb-3">철회 할 항목 선택</h3>
+                        <div class="space-y-4">
+                            <label for="updateEmailConsent" class="flex items-start p-4 border rounded-lg hover:bg-red-50 cursor-pointer transition">
+                                <input type="checkbox" id="updateEmailConsent" name="updateEmailConsent" class="checkbox-withdraw h-5 w-5 mt-1 mr-4 flex-shrink-0">
+                                <div>
+                                    <span class="font-bold text-gray-800">A. 업무 이메일 데이터 철회</span>
+                                </div>
+                            </label>
+                            <label for="updateMessengerConsent" class="flex items-start p-4 border rounded-lg hover:bg-red-50 cursor-pointer transition">
+                                <input type="checkbox" id="updateMessengerConsent" name="updateMessengerConsent" class="checkbox-withdraw h-5 w-5 mt-1 mr-4 flex-shrink-0">
+                                <div>
+                                    <span class="font-bold text-gray-800">B. 업무 메신저 데이터 철회</span>
+                                </div>
+                            </label>
+                            <label for="updateVoiceConsent" class="flex items-start p-4 border rounded-lg hover:bg-red-50 cursor-pointer transition">
+                                <input type="checkbox" id="updateVoiceConsent" name="updateVoiceConsent" class="checkbox-withdraw h-5 w-5 mt-1 mr-4 flex-shrink-0">
+                                <div>
+                                    <span class="font-bold text-gray-800">C. 회의 음성 데이터 철회</span>
+                                </div>
+                            </label>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- 동의자 정보 입력 -->
+                <section class="mb-8">
+                    <h3 class="text-lg font-bold text-gray-700 mb-4">본인 확인 정보 입력</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">성명</label>
+                            <input type="text" id="name" name="name" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="홍길동">
+                        </div>
+                        <div>
+                            <label for="employeeId" class="block text-sm font-medium text-gray-700 mb-1">사번</label>
+                            <input type="text" id="employeeId" name="employeeId" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="2025001">
+                        </div>
+                        <div>
+                            <label for="emailAccount" class="block text-sm font-medium text-gray-700 mb-1">메일 계정</label>
+                            <input type="email" id="emailAccount" name="emailAccount" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="account@sds.co.kr">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 최종 확인 -->
+                <section class="mb-8">
+                    <label for="finalConsent" class="flex items-center p-4 bg-blue-50 border-l-4 border-blue-500 rounded-md">
+                        <input type="checkbox" id="finalConsent" name="finalConsent" required class="checkbox-custom h-5 w-5 mr-4 flex-shrink-0">
+                        <span id="finalConsentText" class="text-gray-800">위 내용을 모두 확인하였으며, 선택한 항목에 대한 데이터 활용에 동의합니다.</span>
+                    </label>
+                </section>
+
+                <!-- 제출 버튼 -->
+                <div class="text-center">
+                    <button type="submit" id="submitButton" class="w-full md:w-1/2 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform transform hover:scale-105">
+                        동의서 제출하기
+                    </button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <!-- 제출 결과 모달 -->
+    <div id="resultModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <div id="modalIcon" class="mx-auto flex items-center justify-center h-12 w-12 rounded-full"></div>
+                <h3 id="modalTitle" class="text-lg leading-6 font-medium text-gray-900 mt-2"></h3>
+                <div class="mt-2 px-7 py-3">
+                    <p id="modalMessage" class="text-sm text-gray-500"></p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="closeModalButton" class="px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        확인
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const submitTab = document.getElementById('submitTab');
+        const updateTab = document.getElementById('updateTab');
+        const submitSection = document.getElementById('submitSection');
+        const updateSection = document.getElementById('updateSection');
+        const finalConsentText = document.getElementById('finalConsentText');
+        const submitButton = document.getElementById('submitButton');
+        const form = document.getElementById('consentForm');
+
+        // 현재 선택된 탭이 '동의 제출'인지 '동의 철회'인지 추적하는 변수
+        let currentAction = 'submit';
+
+        function setTab(action) {
+            currentAction = action;
+            if (action === 'submit') {
+                // '동의 제출' 탭 활성화
+                submitTab.classList.add('active');
+                updateTab.classList.remove('active');
+                submitSection.classList.remove('hidden');
+                updateSection.classList.add('hidden');
+                finalConsentText.textContent = '위 내용을 모두 확인하였으며, 선택한 항목에 대한 데이터 활용에 동의합니다.';
+                submitButton.textContent = '동의서 제출하기';
+            } else { // action === 'update'
+                // '동의 철회' 탭 활성화
+                updateTab.classList.add('active');
+                submitTab.classList.remove('active');
+                updateSection.classList.remove('hidden');
+                submitSection.classList.add('hidden');
+                finalConsentText.textContent = '위 내용을 모두 확인하였으며, 선택한 항목에 대한 동의를 철회합니다.';
+                submitButton.textContent = '동의 철회하기';
+            }
+        }
+
+        submitTab.addEventListener('click', () => setTab('submit'));
+        updateTab.addEventListener('click', () => setTab('update'));
+
+        const resultModal = document.getElementById('resultModal');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const modalIcon = document.getElementById('modalIcon');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+
+        // 중요: 이 URL을 Power Automate에서 생성된 'HTTP POST URL'로 반드시 교체해야 합니다.
+        const POWER_AUTOMATE_URL = 'https://prod-42.southeastasia.logic.azure.com:443/workflows/3db5c3877e174fb5a56a0c7f205ac503/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kjj4w1RnXYwCxSU196grHzeF6rFczr3ARSVlWURImWs';
+
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (POWER_AUTOMATE_URL.includes('붙여넣으세요')) {
+                showModal('error', '설정 필요', 'HTML 코드의 POWER_AUTOMATE_URL을 Power Automate에서 생성된 URL로 교체해야 합니다.');
+                return;
+            }
+
+            submitButton.disabled = true;
+            submitButton.innerHTML = `<svg class="animate-spin h-5 w-5 mr-3 inline-block" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> 제출 중...`;
+
+            let consentData;
+            // 현재 활성화된 탭에 따라 다른 체크박스의 값을 가져옵니다.
+            if (currentAction === 'submit') {
+                consentData = {
+                    emailConsent: document.getElementById('emailConsent').checked,
+                    messengerConsent: document.getElementById('messengerConsent').checked,
+                    voiceConsent: document.getElementById('voiceConsent').checked,
+                };
+            } else { // 'update'
+                consentData = {
+                    emailConsent: document.getElementById('updateEmailConsent').checked,
+                    messengerConsent: document.getElementById('updateMessengerConsent').checked,
+                    voiceConsent: document.getElementById('updateVoiceConsent').checked,
+                };
+            }
+
+            // Power Automate로 보낼 최종 데이터 객체
+            // 'action' 키에 현재 탭의 상태('submit' 또는 'update')가 담기는 것이 핵심입니다.
+            const formData = {
+                action: currentAction,
+                name: document.getElementById('name').value,
+                employeeId: document.getElementById('employeeId').value,
+                emailAccount: document.getElementById('emailAccount').value,
+                ...consentData
+            };
+
+            fetch(POWER_AUTOMATE_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Power Automate에서 응답 본문을 JSON으로 설정한 경우
+                    return response.json().catch(() => ({ status: 'success', title: '제출 완료', message: '요청이 성공적으로 처리되었습니다.' }));
+                }
+                throw new Error(`서버 응답 오류: ${response.status} ${response.statusText}`);
+            })
+            .then(data => {
+                showModal('success', data.title || '제출 완료', data.message || '요청이 성공적으로 처리되었습니다.');
+                form.reset();
+                setTab('submit'); // 성공 후 초기 탭으로
+            })
+            .catch(error => {
+                showModal('error', '제출 실패', error.message);
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                // 버튼 텍스트를 원래대로 되돌립니다.
+                setTab(currentAction); 
+            });
+        });
+
+        function showModal(type, title, message) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            if (type === 'success') {
+                modalIcon.innerHTML = `<svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+                modalIcon.parentElement.classList.remove('bg-red-100');
+                modalIcon.parentElement.classList.add('bg-green-100');
+            } else {
+                modalIcon.innerHTML = `<svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+                modalIcon.parentElement.classList.remove('bg-green-100');
+                modalIcon.parentElement.classList.add('bg-red-100');
+            }
+            resultModal.classList.remove('hidden');
+        }
+
+        closeModalButton.addEventListener('click', () => {
+            resultModal.classList.add('hidden');
+        });
+
+        // 페이지 로드 시 초기 탭 설정
+        setTab('submit');
+    </script>
+</body>
+</html>
